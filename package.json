@@ -1,0 +1,46 @@
+{
+  "name": "cidashboard",
+  "description": "Continuous Integration Dashboard",
+  "version": "1.0.0",
+  "scripts": {
+    "reset-all": "node build/scripts/dropdb && npm run setup",
+    "setup": "npm run setup-front && npm run setup-back",
+    "setup-front": "cd react-app && npm install && cd .. && npm run build-front",
+    "setup-back": "npm install && npm run build-back && npm run setup-db",
+    "-----------------------------------------------------------------------------/": "",
+    "setup-db": "node build/scripts/setupdb",
+    "reset-db": "node build/scripts/dropdb && npm run setup-db",
+    "----------------------------------------------------------------------------//": "",
+    "build": "npm run build-front && npm run build-back",
+    "build-front": "node copyreactconfig && cd react-app && npm run build && cd ..",
+    "build-back": "node cleanbuild && tsc",
+    "---------------------------------------------------------------------------///": "",
+    "start": "node build/services/start",
+    "--------------------------------------------------------------------------////": "",
+    "react": "node copyreactconfig && npm run --prefix react-app start",
+    "-------------------------------------------------------------------------/////": "",
+    "test": "npm run build-back && mocha build/unittests/**/*.js",
+    "dev": "npm run build-back && npm run start"
+  },
+  "author": "Johnny Lee, Elisa Chu, Tony So, Mike Zhou",
+  "homepage": "https://bitbucket.org/tsungyulee/kpi-dashboard#readme",
+  "dependencies": {
+    "JSONStream": "^1.3.2",
+    "csv-parse": "^2.2.0",
+    "express": "^4.16.3",
+    "moment": "^2.22.1",
+    "mysql": "^2.15.0",
+    "python-shell": "^0.5.0"
+  },
+  "devDependencies": {
+    "@types/csv-parse": "^1.1.11",
+    "@types/express": "^4.11.1",
+    "@types/mocha": "^5.2.0",
+    "@types/moment": "^2.13.0",
+    "@types/mysql": "^2.15.4",
+    "@types/node": "^10.0.3",
+    "@types/python-shell": "^0.4.1",
+    "mocha": "^5.1.1",
+    "typescript": "^2.8.3"
+  }
+}
