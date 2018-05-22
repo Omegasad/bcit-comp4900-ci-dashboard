@@ -1,7 +1,9 @@
 > **NOTE: This repository is a copy of the student project (which used a private repository during development).**
 > 
-> Created by BCIT students:
-
+> ##### Project summary:
+>
+> ##### Created by BCIT students:
+>
 > * Elisa Chu
 > * Johnny Lee
 > * Mike Zhou
