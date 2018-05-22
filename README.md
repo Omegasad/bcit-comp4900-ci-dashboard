@@ -4,10 +4,10 @@
 >
 > ##### Created by BCIT students:
 >
-> * Elisa Chu
-> * Johnny Lee
-> * Mike Zhou
-> * Tony So
+> * Elisa Chu [https://github.com/elichu]
+> * Johnny Lee [https://github.com/johnnyl-bcit]
+> * Mike Zhou [https://github.com/MikeWeiZhou]
+> * Tony So [https://github.com/Omegasad]
 
 # KPI Dashboard
 
