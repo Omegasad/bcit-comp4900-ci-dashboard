@@ -1,17 +1,6 @@
-> **NOTE: This repository is a copy of the student project (which used a private repository during development).**
-> 
-> ##### Project summary:
->
-> ##### Created by BCIT students:
->
-> * Elisa Chu [https://github.com/elichu]
-> * Johnny Lee [https://github.com/johnnyl-bcit]
-> * Mike Zhou [https://github.com/MikeWeiZhou]
-> * Tony So [https://github.com/Omegasad]
-
 # KPI Dashboard
 
-BCIT ISSP 2018 spring project - CI Dashboard
+BCIT ISSP 2018 spring project - Lumerical CI Dashboard
 
 1. Installation
 2. Configuration Files
@@ -22,10 +11,11 @@ BCIT ISSP 2018 spring project - CI Dashboard
 7. Included Documentations
 8. React app
 
-## 0. Prototype Update (Sun May 21, 2018 1:30 PM)
+## 0. Prototype Update (Sun May 26, 2018 3:00 PM)
 
 Since the last prototype:
 
+* Fixed date range "all" issue; KPIs will now individually display all available data with the correct date ranges
 * Implemented refresh, auto update, and auto play (cycles through tabs) features for React app
 * Fixed all loading issues for front-end and made various styling and responsiveness tweaks
 * Made KPI mappers more consistent in the code and in the view
