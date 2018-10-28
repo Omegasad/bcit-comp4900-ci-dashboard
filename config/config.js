@@ -24,10 +24,22 @@ config.pipeline =
 
 config.webserver =
 {
-    port:               80,
+    port:               process.env.PORT || 8080, // process.env.PORT required by Google AppEngine
     public_directory:   __dirname.replace(/\\/g, '/').replace(/\/[\w-]+$/, '') + "/react-app/build"
 };
 
+config.webserver.constants =
+{
+    // when requesting KPIs through REST API, date range starting with this constant
+    // will return starting with the earliest data in database
+    daterange_earliest: "start",
+
+    // when requesting KPIs through REST API, date range ending with this constant
+    // will return ending with the latest data in database
+    daterange_latest: "end"
+};
+
+// response codes when using REST API routes for KPIs
 config.webserver.response =
 {
     ok:         200, // everything is good

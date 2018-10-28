@@ -1,5 +1,9 @@
 /node_modules
 /build
 /logs
+/data
 
 .vscode/
+react-app/src/config.react.js
+.gcloudignore
+app.yaml
