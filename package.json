@@ -1,6 +1,6 @@
 {
   "name": "cidashboard",
-  "description": "Continuous Integration Dashboard",
+  "description": "Key Performance Indicator Visualizations Dashboard for Lumerical Inc.",
   "version": "1.0.0",
   "scripts": {
     "reset-all": "node build/scripts/dropdb && npm run setup",

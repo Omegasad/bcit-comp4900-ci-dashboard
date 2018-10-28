@@ -1,6 +1,7 @@
 import * as moment from "moment"
 import { IDataStorage } from "../datastorages/IDataStorage"
 import { IKpiState } from "./IKpiState"
+import { Log } from "../Log"
 const config = require("../../config/config")
 
 /**
@@ -28,7 +29,7 @@ export abstract class KpiMapper
     protected chartFromDate: string;
     protected chartToDate: string;
 
-    private _dataStorage: IDataStorage;
+    protected dataStorage: IDataStorage;
 
     /**
      * Constructor.
@@ -36,7 +37,7 @@ export abstract class KpiMapper
      */
     public constructor(dataStorage: IDataStorage)
     {
-        this._dataStorage = dataStorage;
+        this.dataStorage = dataStorage;
     }
 
     /**
@@ -57,7 +58,7 @@ export abstract class KpiMapper
 
         var sqls: string[] = this.getQueryStrings
         (
-            // -1 day to fromDate to fix Plotly indentation issues
+            // -2 day to fromDate to fix Plotly indentation issues
             fromDate.subtract(2, "day").format(config.dateformat.mysql),
             toDate.format(config.dateformat.mysql),
             KpiMapper.GetDateRange(from, to)
@@ -68,7 +69,7 @@ export abstract class KpiMapper
             var jsonArrayResults: Array<any>[] = [];
             for (let sql of sqls)
             {
-                jsonArrayResults.push(await this._dataStorage.Query(sql));
+                jsonArrayResults.push(await this.dataStorage.Query(sql));
             }
             return this.mapToKpiStateOrNull(jsonArrayResults);
         }
@@ -77,6 +78,92 @@ export abstract class KpiMapper
             throw err;
         }
     }
+
+    /**
+     * Returns the earliest start date of available data for this KPI Mapper.
+     * @async
+     * @returns Earliest start date as a Date object
+     * @throws {Error} Error if storage or start date query error
+     */
+    public async GetStartDate(): Promise<Date>
+    {
+        try
+        {
+            var query: string = this.getStartDateQuery();
+            var results: Array<any> = await this.dataStorage.Query(query);
+
+            if (results.length != 1)
+            {
+                console.log(`kpi ${this.Title}: start date query must return only 1 result. Error has been logged.`);
+                var err: Error = new Error(`kpi ${this.Title}: start date query must return only 1 result.`);
+                Log(err, `query: ${query}`);
+                throw err;
+            }
+
+            if (!results[0].DATE)
+            {
+                console.log(`kpi ${this.Title}: start date query must return a "DATE" column. Error has been logged.`);
+                var err: Error = new Error(`kpi ${this.Title}: start date query must return a "DATE" column.`);
+                Log(err, `query: ${query}`);
+                throw err;
+            }
+
+            return new Date(results[0].DATE);
+        }
+        catch (err)
+        {
+            throw err;
+        }
+    }
+
+    /**
+     * Returns the latest end date of available data for this KPI Mapper.
+     * @async
+     * @returns Latest end date as a Date object
+     * @throws {Error} Error if storage or end date query error
+     */
+    public async GetEndDate(): Promise<Date>
+    {
+        try
+        {
+            var query: string = this.getEndDateQuery();
+            var results: Array<any> = await this.dataStorage.Query(query);
+
+            if (results.length != 1)
+            {
+                console.log(`kpi ${this.Title}: end date query must return only 1 result. Error has been logged.`);
+                var err: Error = new Error(`kpi ${this.Title}: end date query must return only 1 result.`);
+                Log(err, `query: ${query}`);
+                throw err;
+            }
+
+            if (!results[0].DATE)
+            {
+                console.log(`kpi ${this.Title}: end date query must return a "DATE" column. Error has been logged.`);
+                var err: Error = new Error(`kpi ${this.Title}: end date query must return a "DATE" column.`);
+                Log(err, `query: ${query}`);
+                throw err;
+            }
+
+            return new Date(results[0].DATE);
+        }
+        catch (err)
+        {
+            throw err;
+        }
+    }
+
+    /**
+     * Returns the query for the earliest start date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected abstract getStartDateQuery(): string;
+
+    /**
+     * Returns the query for the latest end date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected abstract getEndDateQuery(): string;
 
     /**
      * Returns an array of SQL query strings given a date range.

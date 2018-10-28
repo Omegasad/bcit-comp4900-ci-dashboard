@@ -19,6 +19,44 @@ export class B_StoryPointsVsBugsResolvedKpiMapper extends KpiMapper
     private _y2AxisTitle: string = "Bugs resolved per day (higher is better)";
 
     /**
+     * Returns the query for the earliest start date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getStartDateQuery(): string
+    {
+        return `
+            SELECT MIN(T1.DATE) AS 'DATE'
+            FROM
+            (
+                SELECT MIN(RESOLUTION_DATE) AS 'DATE'
+                FROM ${config.db.tablename.resolved_story_points}
+                UNION ALL
+                SELECT MIN(RESOLUTION_DATE) AS 'DATE'
+                FROM ${config.db.tablename.bug_resolution_dates}
+            ) T1
+        `;
+    }
+
+    /**
+     * Returns the query for the latest end date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getEndDateQuery(): string
+    {
+        return `
+            SELECT MAX(T1.DATE) AS 'DATE'
+            FROM
+            (
+                SELECT MAX(RESOLUTION_DATE) AS 'DATE'
+                FROM ${config.db.tablename.resolved_story_points}
+                UNION ALL
+                SELECT MAX(RESOLUTION_DATE) AS 'DATE'
+                FROM ${config.db.tablename.bug_resolution_dates}
+            ) T1
+        `;
+    }
+
+    /**
      * Returns an array of SQL query strings given a date range.
      * @param {string} from date
      * @param {string} to date

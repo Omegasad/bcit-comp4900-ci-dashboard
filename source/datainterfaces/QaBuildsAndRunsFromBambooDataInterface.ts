@@ -45,10 +45,10 @@ export class QaBuildsAndRunsFromBambooDataInterface implements IDataInterface
     // Product Code : Product Name
     private readonly _productName: object =
     {
-        "FF": "Word",
-        "MM": "Excel",
-        "DD": "PowerPoint",
-        "II": "OneNote"
+        "FX": "PowerPoint",
+        "MX": "Excel",
+        "DX": "Word",
+        "IC": "SharePoint"
     };
 
     /**
@@ -63,6 +63,16 @@ export class QaBuildsAndRunsFromBambooDataInterface implements IDataInterface
         // Expects JSON parse path to be "$*"" by default
         // Meaning it will wrap the original JSON with "value" and "key" properties
         o = o.value;
+
+        // count:       012345 678 9012 34 56 7
+        // BUILD_KEY    aaaaaa LAT bbb- cc 64 [d]
+        // example:     S2018B LAT LIN- DX 64 45
+        //              S2018A LAT WIN- FX 64
+        //
+        // where aaaaaa = cycle e.g. S2018B
+        //          bbb = platform e.g. LIN
+        //           cc = product: FX, MX, DX, IX
+        //            d = branch id (if omitted, then default, otherwise unique number identifying branch)
 
         var productCode: string = o.BUILD_KEY.substring(13, 15);
         var platformCode: string = o.BUILD_KEY.substring(9, 12);

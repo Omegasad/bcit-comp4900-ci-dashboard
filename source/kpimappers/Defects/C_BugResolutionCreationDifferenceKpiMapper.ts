@@ -22,6 +22,44 @@ export class C_BugResolutionCreationDifferenceKpiMapper extends KpiMapper
     private _stretchGoal: number = config.kpi.goals.bugs_rc_difference.stretch_annual/365;
 
     /**
+     * Returns the query for the earliest start date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getStartDateQuery(): string
+    {
+        return `
+            SELECT MIN(T1.DATE) AS 'DATE'
+            FROM
+            (
+                SELECT MIN(RESOLUTION_DATE) AS 'DATE'
+                FROM ${config.db.tablename.bug_resolution_dates}
+                UNION ALL
+                SELECT MIN(CREATION_DATE) AS 'DATE'
+                FROM ${config.db.tablename.bug_resolution_dates}
+            ) T1
+        `;
+    }
+
+    /**
+     * Returns the query for the latest end date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getEndDateQuery(): string
+    {
+        return `
+            SELECT MAX(T1.DATE) AS 'DATE'
+            FROM
+            (
+                SELECT MAX(RESOLUTION_DATE) AS 'DATE'
+                FROM ${config.db.tablename.bug_resolution_dates}
+                UNION ALL
+                SELECT MAX(CREATION_DATE) AS 'DATE'
+                FROM ${config.db.tablename.bug_resolution_dates}
+            ) T1
+        `;
+    }
+
+    /**
      * Returns an array of SQL query strings given a date range.
      * @param {string} from date
      * @param {string} to date

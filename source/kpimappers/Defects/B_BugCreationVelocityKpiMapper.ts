@@ -22,6 +22,30 @@ export class B_BugCreationVelocityKpiMapper extends KpiMapper
     private _stretchGoal: number = config.kpi.goals.bugs_per_day.stretch;
 
     /**
+     * Returns the query for the earliest start date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getStartDateQuery(): string
+    {
+        return `
+            SELECT MIN(CREATION_DATE) AS 'DATE'
+            FROM ${config.db.tablename.bug_resolution_dates};
+        `;
+    }
+
+    /**
+     * Returns the query for the latest end date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getEndDateQuery(): string
+    {
+        return `
+            SELECT MAX(CREATION_DATE) AS 'DATE'
+            FROM ${config.db.tablename.bug_resolution_dates};
+        `;
+    }
+
+    /**
      * Returns an array of SQL query strings given a date range.
      * @param {string} from date
      * @param {string} to date

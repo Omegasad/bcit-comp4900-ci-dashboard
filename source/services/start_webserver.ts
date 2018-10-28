@@ -53,6 +53,7 @@ export function start_webserver(storage: IDataStorage): void
     // Get KPI
     webServer.get("/getkpi/:category/:kpi/:from/:to", async (request: express.Request, response: express.Response) =>
     {
+        // non-existent KPI
         if (!kpilist[request.params.category] || !kpilist[request.params.category][request.params.kpi])
         {
             console.log(`non existent kpi: ${request.params.category}/${request.params.kpi}`);
@@ -62,8 +63,14 @@ export function start_webserver(storage: IDataStorage): void
 
         try
         {
-            var kpi: IKpiState|null = await kpilist[request.params.category][request.params.kpi]
-                .GetKpiStateOrNull(new Date(request.params.from), new Date(request.params.to));
+            var kpiMapper: KpiMapper = kpilist[request.params.category][request.params.kpi];
+            var fromDate: Date = (request.params.from == config.webserver.constants.daterange_earliest)
+                ? await kpiMapper.GetStartDate()
+                : new Date(request.params.from);
+            var toDate: Date = (request.params.to == config.webserver.constants.daterange_latest)
+                ? await kpiMapper.GetEndDate()
+                : new Date(request.params.to);
+            var kpi: IKpiState|null = await kpiMapper.GetKpiStateOrNull(fromDate, toDate);
 
             if (kpi != null)
             {
@@ -126,7 +133,7 @@ function initializeKpisAndReturnList(storage: IDataStorage): any
             {
                 continue;
             }
-    
+
             kpilist[dirname] = {};
             let kpifilenames: string[] = fs.readdirSync(`./build/kpimappers/${dirname}`);
             for (let filename of kpifilenames)
@@ -135,7 +142,7 @@ function initializeKpisAndReturnList(storage: IDataStorage): any
                 {
                     continue;
                 }
-    
+
                 let name: string = filename.replace(".js", '');
                 let apiName: string = filename.replace("KpiMapper.js", '');
                 let req = require(`../kpimappers/${dirname}/${name}`);

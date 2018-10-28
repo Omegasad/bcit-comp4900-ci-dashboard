@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import Category from "./Category";
 import $ from 'jquery';
-import config_dashboard from './config.react';
+import config_dashboard from './config.dashboard';
 
 class Dashboard extends Component {
   state = {
@@ -51,6 +51,12 @@ class Dashboard extends Component {
       }
     }
 
+    var movAvgPeriod;
+
+    if (this.props.movAvgPeriod != null) {
+      movAvgPeriod = <div className="align-self-center" id="movAvg">Moving average period: {this.props.movAvgPeriod} days</div>;
+    }
+
     // Set text for auto update button
     var autoUpdateStatus = (this.props.autoUpdate) ? "Auto Update: ON" : "Auto Update: OFF";
 
@@ -61,41 +67,41 @@ class Dashboard extends Component {
             <ul className="nav nav-pills" id="tablist">
               {categoryList}
             </ul>
-            <div className="align-self-center" id="movAvg">Moving average period: {this.props.movAvgPeriod} days</div>    
+            {movAvgPeriod}
           </div>
           <div className="row d-flex justify-content-between">        
             <div className="btn-group btn-group-toggle" id="dateSelectionButtons" data-toggle="buttons">
               <label className="btn btn-outline-primary active" onClick={() => this.props.setDateRange_by_day(7)}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option1" defaultChecked={true} />7d
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option1" />7d
               </label>
               <label className="btn btn-outline-primary" onClick={() => this.props.setDateRange_by_day(14)}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option1" />14d
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option2" />14d
               </label>
               <label className="btn btn-outline-primary" onClick={() => this.props.setDateRange_by_month(1)}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option2" />1m
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option3" />1m
               </label>
               <label className="btn btn-outline-primary" onClick={() => this.props.setDateRange_by_month(3)}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option2" />3m
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option4" />3m
               </label>
               <label className="btn btn-outline-primary" onClick={() => this.props.setDateRange_by_month(6)}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option3" />6m
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option5" />6m
               </label>
               <label className="btn btn-outline-primary" onClick={() => this.props.setDateRange_by_year(1)}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option4" />1y
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option6" />1y
               </label>
               <label className="btn btn-outline-primary" onClick={() => this.props.setDateRange_by_year(5)}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option5" />5y
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option7" />5y
               </label>
               <label className="btn btn-outline-primary" onClick={() => this.props.setDateRange_ytd()}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option6" />ytd
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option8" />ytd
               </label>
               <label className="btn btn-outline-primary" onClick={() => this.props.setDateRange_all()}>
-                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option7" />all
+                <input type="radio" className="btn btn-outline-primary" name="dateRange" id="option9" />all
               </label>
             </div>
             <div id="dateControlButtons">
               <button type="button" className="btn btn-primary" onClick={() => this.props.triggerUpdate()}>Refresh</button>
-              <button type="button" className="btn btn-outline-success active" data-toggle="button" onClick={() => this.props.triggerAutoUpdate()}>
+              <button type="button" className={`btn btn-outline-success ${(this.props.autoUpdate ? "active" : "")}`} data-toggle="button" onClick={() => this.props.triggerAutoUpdate()}>
                 {autoUpdateStatus}
               </button>
               <button type="button" className="btn btn-outline-secondary" id="tabCycle" onClick={() => this.tabCycleButtonHandler()} />
