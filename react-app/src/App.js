@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import Dashboard from "./Dashboard";
-import config_dashboard from './config.react';
+import config_dashboard from './config.dashboard';
 
 class App extends Component {
   constructor(props) {
@@ -12,7 +12,7 @@ class App extends Component {
       movAvgPeriod: null,
       initialized: false,
       updateDashboard: false,
-      autoUpdate: true
+      autoUpdate: config_dashboard.auto_update_on_load
     };
     
     // Temp end date for demo
@@ -72,25 +72,27 @@ class App extends Component {
     try{
       // GET request to retrieve data
       var res = await fetch(url);
-      var resJSON = {};
+      var resBody;
 
       if (res.ok) {
         // GET request to retrieve data
-        resJSON = await res.json();
+        resBody = await res.text();
+        if (isNaN(resBody))
+          resBody = null;
         if (this.state.initialized) {
           this.setState({
-            movAvgPeriod: resJSON
+            movAvgPeriod: resBody
           });
         } else {
           this.setState({
-            movAvgPeriod: resJSON,
+            movAvgPeriod: resBody,
             initialized: true
           });
         }
       } else {
-        resJSON = await res.json();
+        resBody = await res.json();
         console.log(`Failed request - url: ${res.url}, status: ${res.status}`);
-        console.log(resJSON);
+        console.log(resBody);
       }
     } catch (error) {
       console.log(error.message);      
@@ -148,9 +150,9 @@ class App extends Component {
 
   setDateRange_all() {
     // var end = new Date();
-    var end = this.tempEndDate;    
-    var start = config_dashboard.date_range_all_startDate;
-    this.setState({startDate: start, endDate: end.toDateString(), movAvgPeriod: null});
+    var end = "end";    
+    var start = "start";
+    this.setState({startDate: start, endDate: end, movAvgPeriod: null});
   }
 
   triggerUpdate() {

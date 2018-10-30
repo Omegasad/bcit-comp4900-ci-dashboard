@@ -22,6 +22,32 @@ export class F_DaysToResolutionMajorKpiMapper extends KpiMapper
     private _stretchGoal: number = config.kpi.goals.bugs_resolution_time_major.stretch;
 
     /**
+     * Returns the query for the earliest start date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getStartDateQuery(): string
+    {
+        return `
+            SELECT MIN(RESOLUTION_DATE) AS 'DATE'
+            FROM ${config.db.tablename.bug_resolution_dates}
+            WHERE PRIORITY = 'Major';
+        `;
+    }
+
+    /**
+     * Returns the query for the latest end date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getEndDateQuery(): string
+    {
+        return `
+            SELECT MAX(RESOLUTION_DATE) AS 'DATE'
+            FROM ${config.db.tablename.bug_resolution_dates}
+            WHERE PRIORITY = 'Major';
+        `;
+    }
+
+    /**
      * Returns an array of SQL query strings given a date range.
      * @param {string} from date
      * @param {string} to date

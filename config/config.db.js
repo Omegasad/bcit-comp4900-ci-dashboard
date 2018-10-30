@@ -4,14 +4,29 @@ var db = {};
  * D A T A B A S E *
  *******************/
 
-db.connection =
+// Google App Engine settings
+if (process.env.SQL_DATABASE != null)
 {
-    host:       "localhost",
-    port:       3306,
-    database:   "cidashboard",
-    user:       "root",
-    password:   "password"
-};
+    db.connection =
+    {
+        socketPath: `/cloudsql/${process.env.INSTANCE_CONNECTION_NAME}`,
+        database:   process.env.SQL_DATABASE,
+        user:       process.env.SQL_USER,
+        password:   process.env.SQL_PASSWORD
+    };
+}
+// local MySQL settings
+else
+{
+    db.connection =
+    {
+        host:       "localhost",
+        port:       3306,
+        database:   "cidashboard",
+        user:       "root",
+        password:   "password"
+    };
+}
 
 db.tablename =
 {

@@ -30,6 +30,30 @@ export abstract class BuildSuccessRateSegmentKpiMapper extends KpiMapper
     private _stretchGoal: number = config.kpi.goals.build_success_rate.stretch_rate;
 
     /**
+     * Returns the query for the earliest start date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getStartDateQuery(): string
+    {
+        return `
+            SELECT MIN(BUILD_COMPLETED_DATE) AS 'DATE'
+            FROM ${config.db.tablename.qa_builds_and_runs_from_bamboo};
+        `;
+    }
+
+    /**
+     * Returns the query for the latest end date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getEndDateQuery(): string
+    {
+        return `
+            SELECT MAX(BUILD_COMPLETED_DATE) AS 'DATE'
+            FROM ${config.db.tablename.qa_builds_and_runs_from_bamboo};
+        `;
+    }
+
+    /**
      * Returns an array of SQL query strings given a date range.
      * @param {string} from date
      * @param {string} to date

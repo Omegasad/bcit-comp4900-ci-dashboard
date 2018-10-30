@@ -18,6 +18,30 @@ export class D_DaysToResolutionKpiMapper extends KpiMapper
     private _yAxisTitle: string = "Days (lower is better)";
 
     /**
+     * Returns the query for the earliest start date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getStartDateQuery(): string
+    {
+        return `
+            SELECT MIN(RESOLUTION_DATE) AS 'DATE'
+            FROM ${config.db.tablename.bug_resolution_dates};
+        `;
+    }
+
+    /**
+     * Returns the query for the latest end date of available data for this KPI Mapper.
+     * @returns SQL query as string
+     */
+    protected getEndDateQuery(): string
+    {
+        return `
+            SELECT MAX(RESOLUTION_DATE) AS 'DATE'
+            FROM ${config.db.tablename.bug_resolution_dates};
+        `;
+    }
+
+    /**
      * Returns an array of SQL query strings given a date range.
      * @param {string} from date
      * @param {string} to date

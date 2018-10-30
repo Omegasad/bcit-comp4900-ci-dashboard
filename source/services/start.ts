@@ -12,5 +12,5 @@ async function startservices()
     const storage: IDataStorage = new MysqlDataStorage(config.db.connection);
     await storage.Initialize();
     start_webserver(storage);
-    start_scheduler(storage);
+    // start_scheduler(storage);
 }
